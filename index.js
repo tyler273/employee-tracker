@@ -1,5 +1,5 @@
 const inquirer = require("inquirer");
-const connection = require("./config/connection");
+const db = require("./config/connection");
 const questionsMainMenu = [
     {
       type: 'list',
@@ -61,8 +61,8 @@ const questionsAddEmployee = [
 ];
 
 // TODO: Create a function to initialize app
-function init() {
-  inquirer.prompt(questionsMainMenu).then((data) => processMainMenu(data));
+async function init() {
+  await inquirer.prompt(questionsMainMenu).then((data) => processMainMenu(data));
 }
 
 // Function call to initialize app
@@ -119,8 +119,10 @@ async function addRole(){
 }
 
 async function viewAllDepartments(){
-   const [rows] = await connection.query(`SELECT * FROM department`);
-   console.log(rows);
+    const dbConn = await db;
+    const [rows] = await dbConn.query(`SELECT * FROM department`);
+    console.log(rows);
+    return rows;
 }
 
 async function addDepartment(){
