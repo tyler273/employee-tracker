@@ -86,7 +86,7 @@ async function processMainMenu(data){
             await addRole();
             break;
         case "View All Departments":
-            viewAllDepartments();
+            await viewAllDepartments();
             break;
         case "Add Department":
             await addDepartment();
@@ -118,8 +118,9 @@ async function addRole(){
    await inquirer.prompt(questionsAddRole).then((data) => console.log(data));
 }
 
-function viewAllDepartments(){
-    console.log("We will view all departments!")
+async function viewAllDepartments(){
+   const [rows] = await connection.query(`SELECT * FROM department`);
+   console.log(rows);
 }
 
 async function addDepartment(){
