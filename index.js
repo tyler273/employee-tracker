@@ -1,4 +1,5 @@
 const inquirer = require("inquirer");
+const connection = require("./config/connection");
 const questionsMainMenu = [
     {
       type: 'list',
@@ -34,6 +35,31 @@ const questionsAddRole = [
     }
 ];
 
+const questionsAddEmployee = [
+    {
+        type: 'input',
+        message: "What is the employee's first name?",
+        name: 'employeeFirstName'
+    },
+    {
+        type: 'input',
+        message: "What is the employee's last name?",
+        name: 'employeeLastName'
+    },
+    {
+        type: 'list',
+        message: "What is the employee's role?",
+        name: 'roleList',
+        choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead', 'Lawyer', 'Customer Service']
+    },
+    {
+        type: 'list',
+        message: "Who is the employee's manager?",
+        name: 'managerList',
+        choices: ['John Doe', 'Mike Chan', 'Ashley Rodriguez', 'Kevin Tupik', 'Kunal Singh', 'Malia Brown']
+    }
+];
+
 // TODO: Create a function to initialize app
 function init() {
   inquirer.prompt(questionsMainMenu).then((data) => processMainMenu(data));
@@ -48,7 +74,7 @@ async function processMainMenu(data){
             viewAllEmployees();
             break;
         case "Add Employee":
-            addEmployee();
+            await addEmployee();
             break;
         case "Update Employee Role":
             updateEmployeeRole();
@@ -76,8 +102,8 @@ function viewAllEmployees(){
     console.log("We will view all employees here!")
 }
 
-function addEmployee(){
-    console.log("We will add an employee!")
+async function addEmployee(){
+    await inquirer.prompt(questionsAddEmployee).then((data) => console.log(data));
 }
 
 function updateEmployeeRole(){
