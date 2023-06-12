@@ -98,8 +98,11 @@ async function processMainMenu(data){
     init();
 };
 
-function viewAllEmployees(){
-    console.log("We will view all employees here!")
+async function viewAllEmployees(){
+    const dbConn = await db;
+    const [rows] = await dbConn.query(`SELECT * FROM employee`);
+    console.log(rows);
+    return rows;
 }
 
 async function addEmployee(){
@@ -110,8 +113,11 @@ function updateEmployeeRole(){
     console.log("We will update employee role!")
 }
 
-function viewAllRoles(){
-    console.log("We will view all roles")
+async function viewAllRoles(){
+    const dbConn = await db;
+    const [rows] = await dbConn.query(`SELECT * FROM role`);
+    console.log(rows);
+    return rows;
 }
 
 async function addRole(){
