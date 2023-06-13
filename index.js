@@ -1,10 +1,11 @@
 const inquirer = require("inquirer");
 const db = require("./config/connection");
 const { table } = require("table");
+const figlet = require("figlet");
 const questionsMainMenu = [
     {
       type: 'list',
-      message: 'What would you like to do?',
+      message: "What would you like to do?",
       name: 'options',
       choices: ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department', 'Exit']
     },
@@ -63,11 +64,19 @@ const questionsAddEmployee = [
 
 // TODO: Create a function to initialize app
 async function init() {
-  await inquirer.prompt(questionsMainMenu).then((data) => processMainMenu(data));
-}
+  await inquirer.prompt(questionsMainMenu).then((data) => processMainMenu(data))
+};
 
-// Function call to initialize app
-init();
+figlet("Employee Tracker", function (err, data) {
+    if (err) {
+      console.log("Something went wrong...");
+      console.dir(err);
+      return;
+    }
+    console.log(data);
+    // Function call to initialize app
+    init();
+});
 
 async function processMainMenu(data){
     switch(data.options){
