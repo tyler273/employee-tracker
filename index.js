@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 const db = require("./config/connection");
+const { table } = require("table");
 const questionsMainMenu = [
     {
       type: 'list',
@@ -71,7 +72,7 @@ init();
 async function processMainMenu(data){
     switch(data.options){
         case "View All Employees":
-            viewAllEmployees();
+            await viewAllEmployees();
             break;
         case "Add Employee":
             await addEmployee();
@@ -80,7 +81,7 @@ async function processMainMenu(data){
             updateEmployeeRole();
             break;
         case "View All Roles":
-            viewAllRoles();
+            await viewAllRoles();
             break;
         case "Add Role":
             await addRole();
@@ -101,8 +102,7 @@ async function processMainMenu(data){
 async function viewAllEmployees(){
     const dbConn = await db;
     const [rows] = await dbConn.query(`SELECT * FROM employee`);
-    console.log(rows);
-    return rows;
+    createTable(rows);
 }
 
 async function addEmployee(){
@@ -116,25 +116,32 @@ function updateEmployeeRole(){
 async function viewAllRoles(){
     const dbConn = await db;
     const [rows] = await dbConn.query(`SELECT * FROM role`);
-    console.log(rows);
-    return rows;
+    createTable(rows);
 }
 
 async function addRole(){
-   await inquirer.prompt(questionsAddRole).then((data) => console.log(data));
+    await inquirer.prompt(questionsAddRole).then((data) => console.log(data));
 }
 
 async function viewAllDepartments(){
     const dbConn = await db;
     const [rows] = await dbConn.query(`SELECT * FROM department`);
-    console.log(rows);
-    return rows;
+    createTable(rows);
 }
 
 async function addDepartment(){
-   await inquirer.prompt(questionsAddDepartment).then((data) => console.log(data.departmentName));
+    const newDepartmentData = await inquirer.prompt(questionsAddDepartment);
+    const dbConn = await db;
+    const [rows] = await dbConn.query(`INSERT INTO department(name) VALUES ("${newDepartmentData.departmentName}")`);
 }
 
 function exitApp(){
     process.exit()
+}
+
+// turned data from object into array
+function createTable(rows){
+    let array;
+    array = [Object.keys(rows[0]), ...rows.map((val) => Object.values(val))];
+    console.log(table(array));
 }
